@@ -10,7 +10,7 @@
         }
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.0",
         "irazasyed/telegram-bot-sdk": "^3.13",
         "laravel/framework": "^10.30"
     },
