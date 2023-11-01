@@ -7,7 +7,9 @@ This package provides a way to send notifications via Telegram.
 Package uses `irazasyed/telegram-bot-sdk`. So above all follow 
 [Telegram Bot SDK 
 instructions](https://telegram-bot-sdk.com/docs/getting-started/installation)
-and set up your first Telegram Bot.
+and set up your first Telegram Bot. Most likely you need to run:
+
+    php artisan vendor:publish --tag="telegram-config"
 
 In `config/telegram.php` configuration file add bot `name` parameter and 
 register `DeeplinkCommand`. You may not define `webhook_url` as it will be 

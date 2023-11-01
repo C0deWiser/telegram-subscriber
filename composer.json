@@ -23,5 +23,12 @@
             "email": "pm@101media.ru"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers" : [
+                "Codewiser\\Telegram\\TelegramServiceProvider"
+            ]
+        }
+    }
 }
