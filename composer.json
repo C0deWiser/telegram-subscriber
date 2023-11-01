@@ -10,9 +10,9 @@
         }
     },
     "require": {
-        "php": "^8.2",
-        "irazasyed/telegram-bot-sdk": "^3.13",
-        "laravel/framework": "^10.30"
+        "php": "^8.0",
+        "irazasyed/telegram-bot-sdk": "^3.0",
+        "laravel/framework": "^10.0"
     },
     "suggest": {
         "codewiser/laravel-notifications": "Unified contract for notificaion messages of any type"

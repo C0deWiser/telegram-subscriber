@@ -10,7 +10,7 @@ use Telegram\Bot\BotsManager;
 /**
  * Telegram Service
  */
-readonly class TelegramService
+class TelegramService
 {
     /**
      * @param string $name Bot name.
