@@ -10,7 +10,8 @@ instructions](https://telegram-bot-sdk.com/docs/getting-started/installation)
 and set up your first Telegram Bot.
 
 In `config/telegram.php` configuration file add bot `name` parameter and 
-register `DeeplinkCommand`:
+register `DeeplinkCommand`. You may not define `webhook_url` as it will be 
+reconfigured on a fly.
 
 ```php
 'bots' => [
@@ -18,7 +19,7 @@ register `DeeplinkCommand`:
         'name'             => env('TELEGRAM_BOT_NAME'),
         'token'            => env('TELEGRAM_BOT_TOKEN'),
         'certificate_path' => env('TELEGRAM_CERTIFICATE_PATH'),
-        'webhook_url'      => env('TELEGRAM_WEBHOOK_URL'),
+        //'webhook_url'      => env('TELEGRAM_WEBHOOK_URL'),
         'commands'         => [
             \Codewiser\Telegram\Commands\DeeplinkCommand::class
         ],
@@ -105,7 +106,7 @@ We are ready to go.
 ### Register webhook
 
 If you are properly configure bot in `config/telegram.php` this is enough 
-to use `telegram:webhook` command, that is provided by `Telegram Bot SDK` 
+to use `telegram:webhook` command provided by `Telegram Bot SDK` 
 package. We recommend to read help:
 
     php artisan help telegram:webhook
