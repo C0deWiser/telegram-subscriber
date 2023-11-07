@@ -6,6 +6,8 @@ use Codewiser\Telegram\Contracts\TelegramNotifiable;
 use Codewiser\Telegram\Contracts\TelegramNotifiableProvider;
 use Telegram\Bot\Api;
 use Telegram\Bot\BotsManager;
+use Telegram\Bot\Exceptions\TelegramBotNotFoundException;
+use Telegram\Bot\Exceptions\TelegramSDKException;
 
 /**
  * Telegram Service
@@ -26,9 +28,20 @@ class TelegramService
         //
     }
 
-    public function bot(string $name = null): Api
+    /**
+     * Get api by bot name (and optionally verify token).
+     *
+     * @throws TelegramBotNotFoundException|TelegramSDKException
+     */
+    public function bot(string $name = null, string $token = null): Api
     {
-        return $this->bots->bot($name);
+        $bot = $this->bots->bot($name);
+
+        if ($token && $token != $bot->getAccessToken()) {
+            throw new TelegramBotNotFoundException('Invalid token');
+        }
+
+        return $bot;
     }
 
     /**
