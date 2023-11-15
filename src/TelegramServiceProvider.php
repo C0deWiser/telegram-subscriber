@@ -29,7 +29,7 @@ class TelegramServiceProvider extends ServiceProvider
         });
 
         // Setup webhook_url for every configured bot
-        foreach (config('telegram.bots') as $bot => $config) {
+        foreach (config('telegram.bots', []) as $bot => $config) {
             if (isset($config['token'])) {
                 config()->set("telegram.bots.$bot.webhook_url", url("telegram/$bot/{$config['token']}"));
             }
