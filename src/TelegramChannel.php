@@ -75,8 +75,6 @@ class TelegramChannel
                 '<b><strong><i><em><u><ins><s><strike><del><span><tg-spoiler><a><tg-emoji><code><pre>'
             );
 
-            logger()->debug($message['text']);
-
             return $message;
         }
 

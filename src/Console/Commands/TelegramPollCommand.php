@@ -25,10 +25,13 @@ class TelegramPollCommand extends Command
     {
         while (true) {
 
-            $service
+            $message = $service
                 ->bot($this->argument('bot'))
-                ->commandsHandler(false)
-                ->dump();
+                ->commandsHandler(false);
+
+            if ($message) {
+                dump($message);
+            }
 
             sleep(10);
         }
