@@ -9,6 +9,11 @@
             "Codewiser\\Telegram\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": "^8.0",
         "irazasyed/telegram-bot-sdk": "^3.0",
@@ -30,5 +35,9 @@
                 "Codewiser\\Telegram\\TelegramServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "codewiser/laravel-notifications": "^1.1",
+        "phpunit/phpunit": "^11.1"
     }
 }

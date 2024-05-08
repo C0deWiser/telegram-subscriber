@@ -31,19 +31,22 @@ class TelegramChannel
 
         $route = $notifiable->routeNotificationFor('telegram', $notification);
 
-
         if (is_null($message) || is_null($route)) {
             return null;
         }
 
-        $message = $this->prepareMessage($message);
+        $payload = $this->prepareMessage($message);
 
-        if (!$message) {
+        if (!$payload) {
             return null;
         }
 
         try {
-            return $this->service->bot()->sendMessage($message + ['chat_id' => $route]);
+            if ($message instanceof \Codewiser\Notifications\Messages\TelegramEditMessage) {
+                return $this->service->bot()->editMessageText($payload + ['chat_id' => $route]);
+            }
+
+            return $this->service->bot()->sendMessage($payload + ['chat_id' => $route]);
         } catch (Throwable $exception) {
             event(new NotificationDeliveryFailed('telegram', $notifiable, $notification, $exception));
             logger()->debug($exception->getMessage());
