@@ -5,6 +5,7 @@ namespace Codewiser\Telegram;
 use Codewiser\Telegram\Events\NotificationDeliveryFailed;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Notifications\Events\NotificationFailed;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Traits\Localizable;
 use Telegram\Bot\Objects\Message;
@@ -49,7 +50,9 @@ class TelegramChannel
             return $this->service->bot()->sendMessage($payload + ['chat_id' => $route]);
         } catch (Throwable $exception) {
             event(new NotificationDeliveryFailed('telegram', $notifiable, $notification, $exception));
-            logger()->debug($exception->getMessage());
+            event(new NotificationFailed($notifiable, $notification, 'telegram', [
+                'exception' => $exception,
+            ]));
             return null;
         }
     }
