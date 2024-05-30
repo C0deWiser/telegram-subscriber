@@ -189,28 +189,24 @@ String interprets as html and will be sent with `['parse_mode' => 'HTML']`.
 ### Failed notifications
 
 When notification is failed to deliver to a user, 
-`\Codewiser\Telegram\Events\NotificationDeliveryFailed` event is propagated.
+`\Illuminate\Notifications\Events\NotificationFailed` event is propagated.
 
 Some fails are catchable. For example, if user locks a bot, we will get a 
 `403` response status. In that case we should unsubscribe user from future 
-notifications.
+notifications. `400` means that chat was not found.
+
+If  you wish to automatically unsubscribe such users, register an event listener
+within the boot method of your application's AppServiceProvider:
 
 ```php
-use \Codewiser\Telegram\Events\NotificationDeliveryFailed;
-use \Codewiser\Telegram\Contracts\TelegramNotifiable;
+use \Codewiser\Telegram\Listeners\UnsubscribeTelegramNotifiable;
+use \Illuminate\Notifications\Events\NotificationFailed;
 
-class DeliveryFailedListener 
+public function boot(): void
 {
-    public function handle(NotificationDeliveryFailed $event): void
-    {
-        if ($event->channel == 'telegram') {
-            if ($event->exception instanceof GuzzleException &&
-                $event->exception->getCode() == 403]) {
-                if ($event->notifiable instanceof TelegramNotifiable) {
-                    $event->notifiable->setRouteForTelegram(null);
-                }
-            }
-        }
-    }
+    Event::listen(
+        NotificationFailed::class,
+        UnsubscribeTelegramNotifiable::class,
+    );
 }
 ```

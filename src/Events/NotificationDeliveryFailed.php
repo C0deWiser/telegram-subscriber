@@ -7,6 +7,9 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Queue\SerializesModels;
 use Throwable;
 
+/**
+ * @deprecated
+ */
 class NotificationDeliveryFailed
 {
     use Dispatchable, SerializesModels;
