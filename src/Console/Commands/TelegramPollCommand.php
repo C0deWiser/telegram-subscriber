@@ -12,7 +12,7 @@ class TelegramPollCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'telegram:poll {bot? : Bot name defined in config}';
+    protected $signature = 'telegram:poll {bot? : Bot name defined in config} {--timeout=600 : Timeout in seconds}';
 
     /**
      * The console command description.
@@ -23,7 +23,10 @@ class TelegramPollCommand extends Command
 
     public function handle(TelegramService $service): void
     {
-        while (true) {
+        $timeout = $this->option('timeout');
+        $stop = time() + $timeout;
+
+        while (time() < $stop) {
 
             $message = $service
                 ->bot($this->argument('bot'))
@@ -33,7 +36,7 @@ class TelegramPollCommand extends Command
                 dump($message);
             }
 
-            sleep(10);
+            sleep(5);
         }
     }
 }
