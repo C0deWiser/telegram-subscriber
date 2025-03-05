@@ -20,8 +20,10 @@
         "laravel/framework": ">=10.0"
     },
     "suggest": {
-        "codewiser/laravel-notifications": "Unified contract for notificaion messages of any type"
+        "codewiser/laravel-notifications": "Unified contract for notificaion messages of any type",
+        "laravel-notification-channels/telegram": "Telegram Notifications Channel for Laravel"
     },
+    "abandoned": true,
     "authors": [
         {
             "name": "Cellard",
