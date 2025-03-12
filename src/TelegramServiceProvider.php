@@ -5,7 +5,6 @@ namespace Codewiser\Telegram;
 use Codewiser\Telegram\Console\Commands\TelegramMeCommand;
 use Codewiser\Telegram\Console\Commands\TelegramPollCommand;
 use Codewiser\Telegram\Contracts\TelegramNotifiableProvider;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Telegram\Bot\BotsManager;
@@ -34,10 +33,6 @@ class TelegramServiceProvider extends ServiceProvider
                 config()->set("telegram.bots.$bot.webhook_url", url("telegram/$bot/{$config['token']}"));
             }
         }
-
-        Notification::extend('telegram', function ($app) {
-            return new TelegramChannel(app(TelegramService::class));
-        });
     }
 
     public function register(): void

@@ -1,7 +1,7 @@
 {
-    "name": "codewiser/telegram-channel",
-    "description": "Laravel Telegram channel for Notifications",
-    "keywords": ["Laravel", "Notification", "Telegram"],
+    "name": "codewiser/telegram-subscriber",
+    "description": "Telegram Subscriber for Laravel",
+    "keywords": ["Laravel", "Subscriber", "Telegram"],
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -23,7 +23,6 @@
         "codewiser/laravel-notifications": "Unified contract for notificaion messages of any type",
         "laravel-notification-channels/telegram": "Telegram Notifications Channel for Laravel"
     },
-    "abandoned": true,
     "authors": [
         {
             "name": "Cellard",

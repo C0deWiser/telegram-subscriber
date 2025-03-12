@@ -8,7 +8,12 @@ interface TelegramNotifiable
 {
     public function getKey();
 
-    public function routeNotificationForTelegram(Notification $notification = null): mixed;
+    /**
+     * @param  null|Notification  $notification
+     *
+     * @return mixed
+     */
+    public function routeNotificationForTelegram($notification = null): mixed;
 
     public function setRouteForTelegram($route);
 }

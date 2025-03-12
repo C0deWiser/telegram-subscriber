@@ -1,6 +1,6 @@
-# Laravel Telegram Channel
+# Telegram Subscriber for Laravel
 
-This package provides a way to send notifications via Telegram.
+The package provides a solution for retrieving chat ID.
 
 ## Installation and setup
 
@@ -16,6 +16,8 @@ register `DeeplinkCommand`. You may not define `webhook_url` as it will be
 reconfigured on a fly.
 
 ```php
+# config/telegram.php
+
 'bots' => [
     'my_bot' => [
         'name'             => env('TELEGRAM_BOT_NAME'),
@@ -29,23 +31,29 @@ reconfigured on a fly.
 ]
 ```
 
-Next, implement `\Codewiser\Telegram\Contracts\TelegramNotifiable` to a 
+## Retrieving chat ID
+
+Implement `\Codewiser\Telegram\Contracts\TelegramNotifiable` to a 
 `User` model. You might need to write a migration...
 
 ```php
+use \Illuminate\Notifications\Notifiable;
 use \Illuminate\Database\Eloquent\Model;
 use \Codewiser\Telegram\Contracts\TelegramNotifiable;
 
 class User extends Model implements TelegramNotifiable
 {
+    use Notifiable;
+    
     public function routeNotificationForTelegram($notification = null): mixed
     {
-        return $this->telegram;
+        return $this->telegram_user_id;
     }
 
     public function setRouteForTelegram($route): void
     {
-        $this->telegram = $route;
+        $this->telegram_user_id = $route;
+        
         $this->save();
     }
 }
@@ -69,7 +77,10 @@ class TelegramUserProvider implements TelegramNotifiableProvider
 
         cache()->set(
             $token,
-            $notifiable->getKey(),
+            [
+                'key'   => $notifiable->getKey(),
+                'model' => get_class($notifiable),
+            ],
             now()->addMinutes(5)
         );
 
@@ -81,10 +92,13 @@ class TelegramUserProvider implements TelegramNotifiableProvider
      */
     public function resolveToken(string $token): ?TelegramNotifiable
     {
-        $key = cache()->pull($token);
+        $notifiable = cache()->pull($token);
 
-        if ($key) {
-            return User::query()->find($key);
+        if ($notifiable) {
+            $key = $notifiable['key'];
+            $model = $notifiable['model'];
+            
+            return $model::find($key);
         }
 
         return null;
@@ -152,61 +166,3 @@ User follows deeplink, opens telegram client and presses Start button.
 resolves deeplink token and update `User` with `chat_id`.
 
 For now, this user has telegram route and may be notified via Telegram.
-
-### Notify user
-
-To notify user via Telegram, add `toTelegram` method to a notification. Do 
-not forget to add `telegram` to `via` method.
-
-```php
-class Notification extends \Illuminate\Notifications\Notification
-{
-    /**
-     * Get the notification's delivery channels.
-     */
-    public function via(object $notifiable): array
-    {
-        return ['mail', 'telegram'];
-    }
-    
-    /**
-     * Get the telegram representation of the notification.
-     */
-    public function toTelegram(object $notifiable)
-    {
-        //
-    }
-}
-```
-
-Telegram notification message may be as string, as array.
-
-Array keys fits [Telegram sendMessage 
-method](https://core.telegram.org/bots/api#sendmessage).
-
-String interprets as html and will be sent with `['parse_mode' => 'HTML']`.
-
-### Failed notifications
-
-When notification is failed to deliver to a user, 
-`\Illuminate\Notifications\Events\NotificationFailed` event is propagated.
-
-Some fails are catchable. For example, if user locks a bot, we will get a 
-`403` response status. In that case we should unsubscribe user from future 
-notifications. `400` means that chat was not found.
-
-If  you wish to automatically unsubscribe such users, register an event listener
-within the boot method of your application's AppServiceProvider:
-
-```php
-use \Codewiser\Telegram\Listeners\UnsubscribeTelegramNotifiable;
-use \Illuminate\Notifications\Events\NotificationFailed;
-
-public function boot(): void
-{
-    Event::listen(
-        NotificationFailed::class,
-        UnsubscribeTelegramNotifiable::class,
-    );
-}
-```

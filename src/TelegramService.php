@@ -10,7 +10,9 @@ use Telegram\Bot\Exceptions\TelegramBotNotFoundException;
 use Telegram\Bot\Exceptions\TelegramSDKException;
 
 /**
- * Telegram Service
+ * Telegram Service.
+ *
+ * Combines BotsManager and TelegramNotifiableProvider.
  */
 class TelegramService
 {
