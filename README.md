@@ -166,3 +166,19 @@ User follows deeplink, opens telegram client and presses Start button.
 resolves deeplink token and update `User` with `chat_id`.
 
 For now, this user has telegram route and may be notified via Telegram.
+
+### Unsubscribe user
+
+If user blocks or delete a bot, app can not deliver notification: telegram 
+responds with 403 status code. In that case we should count user as 
+unsubscribed and may delete `chat_id`.
+
+To do so, just register event listener:
+
+```php
+use Codewiser\Telegram\Listeners\UnsubscribeTelegramNotifiable;
+use Illuminate\Notifications\Events\NotificationFailed;
+use Illuminate\Support\Facades\Event;
+
+Event::listen(NotificationFailed::class, UnsubscribeTelegramNotifiable::class);
+```

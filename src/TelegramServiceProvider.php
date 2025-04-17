@@ -36,8 +36,6 @@ class TelegramServiceProvider extends ServiceProvider
                 config()->set("telegram.bots.$bot.webhook_url", url("telegram/$bot/{$config['token']}"));
             }
         }
-
-        Event::listen(NotificationFailed::class, UnsubscribeTelegramNotifiable::class);
     }
 
     public function register(): void
