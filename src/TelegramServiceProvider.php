@@ -30,6 +30,8 @@ class TelegramServiceProvider extends ServiceProvider
             $this->loadRoutesFrom(__DIR__ . '/../routes/routes.php');
         });
 
+        Event::listen(NotificationFailed::class, UnsubscribeTelegramNotifiable::class);
+
         // Setup webhook_url for every configured bot
         foreach (config('telegram.bots', []) as $bot => $config) {
             if (isset($config['token'])) {

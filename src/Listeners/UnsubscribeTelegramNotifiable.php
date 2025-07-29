@@ -3,6 +3,7 @@
 namespace Codewiser\Telegram\Listeners;
 
 use Codewiser\Telegram\Contracts\TelegramNotifiable;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Notifications\Events\NotificationFailed;
 
 class UnsubscribeTelegramNotifiable
@@ -23,10 +24,20 @@ class UnsubscribeTelegramNotifiable
         if ($event->channel == 'telegram') {
             $exception = $event->data['exception'] ?? null;
 
-            if ($exception instanceof \Throwable && $event->notifiable instanceof TelegramNotifiable) {
-                if ($exception->getCode() >= 400 && $exception->getCode() < 500) {
-                    // Unsubscribe notifiable.
-                    $event->notifiable->setRouteForTelegram(null);
+            if ($event->notifiable instanceof TelegramNotifiable) {
+
+                // Laravel Notification Channel encapsulate ClientException into CouldNotSendNotification
+
+                while ($exception && !($exception instanceof ClientException)) {
+                    $exception = $exception->getPrevious();
+                }
+
+                if ($exception instanceof ClientException) {
+                    $status = $exception->getResponse()->getStatusCode();
+                    if ($status >= 400 && $status < 500) {
+                        // Unsubscribe notifiable.
+                        $event->notifiable->setRouteForTelegram(null);
+                    }
                 }
             }
         }
